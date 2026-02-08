@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Turtle Island Medicine Wheel</title>
+    <title>Tatawaw Teachings</title>
     <style>
         /* --- GLOBAL RESET & VARS --- */
         :root {
@@ -11,7 +11,7 @@
             --teal: #00b8c8;
             --gold: #ffb326;
             --red: #e63923;
-            --dark: #222;
+            --dark: #111;
             --cream: #fffdf5;
         }
 
@@ -33,7 +33,12 @@
         @media (max-width: 600px) {
             #bg-orange, #bg-pattern { background-size: 20vw auto; }
         }
-        #bg-orange { z-index: 1; transition: opacity 1.5s ease; }
+        /* Login state: Orange beads dim slightly to pop the glass card */
+        #bg-orange { 
+            z-index: 1; 
+            transition: opacity 1.5s ease, filter 1.5s ease;
+            filter: brightness(0.8); 
+        }
         #bg-pattern { z-index: 2; opacity: 0; transition: opacity 1.5s ease; }
 
         /* --- CONTACT ICON --- */
@@ -68,48 +73,100 @@
         .feather-wrapper {
             width: 95%; max-width: 650px; height: auto;
             z-index: 12; transition: all 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.6));
+            filter: drop-shadow(0 15px 25px rgba(0,0,0,0.8));
             flex-shrink: 0; pointer-events: none;
         }
 
-        /* --- LOGIN CARD --- */
+        /* --- UPGRADED LOGIN CARD (Obsidian Glass) --- */
         #login-card {
-            background: rgba(0, 0, 0, 0.95);
-            border-radius: 15px; text-align: center;
+            position: relative;
+            background: rgba(10, 10, 10, 0.65); /* Dark semi-transparent */
+            backdrop-filter: blur(12px); /* Frosted Glass */
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px; 
+            text-align: center;
             width: 100%; max-width: 380px;
-            border: 2px solid #444; border-bottom: 4px solid var(--orange);
-            box-shadow: 0 0 25px rgba(0,0,0,0.8);
+            
+            /* Glass Border */
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+            
             z-index: 11; opacity: 1; transform: translateY(0);
             transition: all 0.8s ease;
-            display: flex; flex-direction: column; gap: 15px;
-            padding: 25px 20px;
-            pointer-events: auto; /* Re-enable clicks */
+            display: flex; flex-direction: column; gap: 20px;
+            padding: 40px 30px;
+            pointer-events: auto;
+            overflow: hidden;
         }
+
+        /* Animated Gradient Border Glow */
+        #login-card::after {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, var(--red), var(--gold), var(--teal), var(--orange));
+            background-size: 300% 100%;
+            animation: shimmer 4s infinite linear;
+        }
+        @keyframes shimmer { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
+
         @media (min-width: 768px) {
-            #login-card { padding: 40px 50px; }
-            #main-container { gap: 30px; }
+            #login-card { padding: 50px 60px; }
+            #main-container { gap: 40px; }
+        }
+
+        .login-header {
+            color: var(--gold); 
+            font-size: 0.85rem; letter-spacing: 3px; text-transform: uppercase;
+            margin-bottom: 5px; font-family: sans-serif;
+            text-shadow: 0 0 10px rgba(255, 179, 38, 0.4);
         }
 
         #password-input {
-            background: transparent; border: none;
-            border-bottom: 2px solid #666; color: white;
-            font-size: 1.1rem; padding: 10px; text-align: center;
-            font-family: sans-serif; outline: none; transition: border-color 0.3s;
-            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: none; border-radius: 8px;
+            border-bottom: 2px solid rgba(255,255,255,0.2); 
+            color: white;
+            font-size: 1.2rem; padding: 15px; text-align: center;
+            font-family: sans-serif; outline: none; 
+            transition: all 0.3s; width: 100%;
         }
-        #password-input:focus { border-bottom: 2px solid var(--teal); }
-        #password-input::placeholder { color: rgba(255,255,255,0.4); }
+        #password-input:focus { 
+            background: rgba(255, 255, 255, 0.1);
+            border-bottom: 2px solid var(--teal); 
+            box-shadow: 0 5px 15px rgba(0, 184, 200, 0.2);
+        }
+        #password-input::placeholder { color: rgba(255,255,255,0.3); font-size: 1rem; }
 
+        /* Neon Primary Button */
         .login-btn {
-            background: linear-gradient(45deg, var(--orange), #d1560d);
-            color: white; border: none; padding: 14px;
+            background: linear-gradient(90deg, #f37021, #e63923);
+            color: white; border: none; padding: 16px;
             font-size: 1rem; font-weight: bold; letter-spacing: 1px;
-            border-radius: 30px; cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            width: 100%; margin-top: 10px;
+            border-radius: 12px; cursor: pointer;
+            transition: all 0.3s; width: 100%;
+            box-shadow: 0 5px 15px rgba(230, 57, 35, 0.3);
         }
-        .login-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(243, 112, 33, 0.4); }
-        .shake { animation: shake 0.5s; border-bottom: 4px solid red !important; }
+        .login-btn:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 10px 25px rgba(230, 57, 35, 0.5); 
+        }
+        
+        /* Ghost Secondary Button */
+        .signup-btn {
+            background: transparent;
+            color: rgba(255,255,255,0.7); 
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 12px; font-size: 0.85rem; font-weight: normal; letter-spacing: 0.5px;
+            border-radius: 12px; cursor: pointer;
+            transition: all 0.3s; width: 100%;
+        }
+        .signup-btn:hover { 
+            border-color: var(--teal); color: var(--teal); 
+            background: rgba(0, 184, 200, 0.05);
+            box-shadow: 0 0 15px rgba(0, 184, 200, 0.2);
+        }
+        
+        .shake { animation: shake 0.5s; border-bottom-color: red !important; }
         @keyframes shake { 0% { transform: translateX(0); } 25% { transform: translateX(-10px); } 50% { transform: translateX(10px); } 75% { transform: translateX(-10px); } 100% { transform: translateX(0); } }
 
         /* --- TURTLE & WHEEL --- */
@@ -168,7 +225,7 @@
         /* TEXT INSIDE WHEEL */
         .wheel-text {
             font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
-            font-weight: bold; font-size: 3.0px; text-anchor: middle;
+            font-weight: bold; font-size: 2.8px; text-anchor: middle;
             pointer-events: none; fill: black;
         }
         .text-white { fill: white; }
@@ -212,7 +269,7 @@
             transform-origin: 50px 50px; /* Force Center */
         }
         
-        /* Default Wheel State: Matches the SVG rotation (-45deg) */
+        /* Default Wheel State */
         #medicine-wheel {
             transform: rotate(-45deg) scale(1);
             opacity: 1;
@@ -230,8 +287,23 @@
             opacity: 1; pointer-events: auto;
         }
         
-        /* Back Button Animation - NO TRANSFORM */
+        /* Back Button Animation */
         .back-btn:hover circle { fill: #007780; } /* Darker teal on hover */
+
+        /* --- MISSING STYLE FIXED HERE --- */
+        /* This controls the text inside the expanding circle */
+        .info-content-style {
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100%; 
+            text-align: center; 
+            color: #222; 
+            font-family: 'Palatino Linotype', serif; 
+            font-size: 3.0px; /* Adjust text size here */
+            line-height: 1.4; 
+            padding: 15px;
+        }
 
     </style>
 </head>
@@ -288,9 +360,13 @@
     </div>
 
     <div id="login-card">
-        <div style="color:var(--orange); font-size: 0.9rem; letter-spacing: 2px;">SECURE ACCESS</div>
+        <div class="login-header">Secure Access</div>
         <input type="password" id="password-input" placeholder="Enter Password" onkeypress="handleEnter(event)">
         <button class="login-btn" onclick="attemptLogin()">ENTER PORTAL</button>
+        
+        <div style="width: 100%; height: 1px; background: rgba(255,255,255,0.1); margin: 5px 0;"></div>
+        
+        <button class="signup-btn" onclick="openSignup()">New Student? Sign Up</button>
     </div>
 </div>
 
@@ -423,7 +499,7 @@
                 <circle cx="50" cy="50" r="36" fill="url(#infoGradient)" stroke="black" stroke-width="0.5"/>
                 
                 <foreignObject x="15" y="15" width="70" height="70">
-                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; justify-content: center; align-items: center; height: 100%; text-align: center; color: #222; font-family: 'Palatino Linotype', serif; font-size: 3.5px; line-height: 1.4; padding: 15px;">
+                    <div xmlns="http://www.w3.org/1999/xhtml" class="info-content-style">
                         <div id="info-text-content">Content goes here...</div>
                     </div>
                 </foreignObject>
@@ -485,7 +561,7 @@
 
     /* --- RESOURCE LOGIC --- */
     const weekLinks = {
-        1: "https://docs.google.com/document/d/YOUR_WEEK_1_LINK",
+        1: "https://docs.google.com/document/d/1DlOVAx3_AJ8sduBflfMvtXnczXdQu5QiLc3Oy_5EikA/edit?usp=sharing",
         2: "https://docs.google.com/document/d/YOUR_WEEK_2_LINK",
         3: "https://docs.google.com/document/d/YOUR_WEEK_3_LINK",
         4: "https://docs.google.com/document/d/YOUR_WEEK_4_LINK"
@@ -504,8 +580,14 @@
         else { alert("Week " + weekNum + " resources are coming soon!"); }
     }
 
+    /* --- SIGN UP LOGIC --- */
+    function openSignup() {
+        // REPLACE THIS LINK WITH YOUR ACTUAL GOOGLE FORM
+        window.open('YOUR_GOOGLE_FORM_LINK', '_blank');
+    }
+
     /* --- BEADWORK GENERATOR --- */
-    const colors = { teal: '#00b8c8', dark: '#2d2d2d', red: '#e63923', orange: '#f37021', gold: '#ffb326', white: '#ffffff' };
+    const colors = { teal: '#00b8c8', dark: '#111', red: '#e63923', orange: '#f37021', gold: '#ffb326', white: '#ffffff' };
     const patternArr = [{r:1,c:colors.dark,cols:[1,8]},{r:2,c:colors.dark,cols:[1,2,7,8]},{r:3,c:colors.dark,cols:[2,3,6,7]},{r:3,c:colors.red,cols:[1,8]},{r:4,c:colors.red,cols:[1,2,7,8]},{r:4,c:colors.dark,cols:[3,4,5,6]},{r:5,c:colors.red,cols:[2,3,4,5,6,7]},{r:5,c:colors.orange,cols:[1,8]},{r:6,c:colors.orange,cols:[1,8]},{r:5,c:colors.dark,cols:[4,5]},{r:6,c:colors.red,cols:[2,3,4,5,6,7]},{r:7,c:colors.orange,cols:[2,3,4,5,6,7]},{r:7,c:colors.red,cols:[4,5]},{r:7,c:colors.gold,cols:[1,8]},{r:8,c:colors.gold,cols:[1,8]},{r:8,c:colors.orange,cols:[2,3,4,5,6,7]},{r:9,c:colors.gold,cols:[2,3,4,5,6,7]},{r:9,c:colors.white,cols:[1,8]},{r:9,c:colors.orange,cols:[4,5]},{r:10,c:colors.gold,cols:[3,4,5,6]},{r:10,c:colors.white,cols:[1,2,7,8]},{r:11,c:colors.white,cols:[2,3,6,7]},{r:11,c:colors.gold,cols:[4,5]},{r:12,c:colors.white,cols:[2,3,4,5,6,7]},{r:13,c:colors.white,cols:[3,4,5,6]},{r:14,c:colors.white,cols:[4,5]}];
 
     function generateTexture(isLogin) {
