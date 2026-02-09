@@ -33,143 +33,155 @@
         @media (max-width: 600px) {
             #bg-orange, #bg-pattern { background-size: 20vw auto; }
         }
-        /* Login state: Orange beads dim slightly to pop the glass card */
+        /* Login state: Dim orange beads */
         #bg-orange { 
             z-index: 1; 
             transition: opacity 1.5s ease, filter 1.5s ease;
-            filter: brightness(0.8); 
+            filter: brightness(0.5); 
         }
         #bg-pattern { z-index: 2; opacity: 0; transition: opacity 1.5s ease; }
 
-        /* --- CONTACT ICON --- */
+        /* --- FEATHER HEADER (PERSISTENT LAYER) --- */
+        .feather-wrapper {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20; /* Above everything */
+            width: 85%; max-width: 600px; height: auto;
+            transition: all 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.8));
+            pointer-events: none; /* Let clicks pass through */
+            
+            /* State 1: Login Screen Position (Centered-ish) */
+            top: 10%; 
+        }
+
+        /* State 2: Main Screen Position (Header) */
+        body.logged-in .feather-wrapper {
+            top: 2%; /* Move to top */
+            width: 50%; /* Shrink */
+            max-width: 350px;
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5));
+        }
+
+        /* --- LOGIN CONTAINER (PAW ONLY) --- */
+        #login-container {
+            position: absolute; top: 0; left: 0; 
+            width: 100%; height: 100dvh;
+            z-index: 10; 
+            display: flex; justify-content: center; align-items: center;
+            transition: opacity 1s ease, transform 1s ease;
+        }
+
+        /* --- THE BEAR PAW WRAPPER --- */
+        #paw-wrapper {
+            position: relative;
+            width: 90vmin; max-width: 550px;
+            aspect-ratio: 1 / 1;
+            display: flex; justify-content: center; align-items: center;
+            filter: drop-shadow(0 20px 30px rgba(0,0,0,0.8));
+            flex-shrink: 0;
+            margin-top: 10%; /* Slight offset to clear the feather */
+        }
+
+        .bear-svg {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1;
+            animation: breathe 6s ease-in-out infinite;
+        }
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        /* --- FORM INSIDE PAW --- */
+        #paw-form {
+            position: relative; z-index: 2;
+            width: 40%; max-width: 240px;
+            display: flex; flex-direction: column; gap: 8px;
+            align-items: center;
+            margin-top: 45%; /* Pushed down into palm */
+        }
+
+        /* Input Styles */
+        .input-wrapper { position: relative; width: 100%; }
+
+        #password-input {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255,255,255,0.3); 
+            border-radius: 20px;
+            color: white; font-size: 0.9rem; padding: 12px 45px 12px 15px;
+            font-family: sans-serif; outline: none; transition: all 0.3s;
+            width: 100%;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+        }
+        #password-input:focus { 
+            background: rgba(0, 0, 0, 0.9);
+            border-color: var(--teal); 
+            box-shadow: 0 0 10px rgba(0, 184, 200, 0.4);
+        }
+        #password-input::placeholder { color: rgba(255,255,255,0.5); font-style: italic; letter-spacing: 0.5px; font-size: 0.8rem; }
+
+        .arrow-submit-btn {
+            position: absolute; right: 4px; top: 4px; bottom: 4px;
+            width: 32px; background: var(--teal);
+            border: none; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer; transition: transform 0.2s, background 0.2s;
+        }
+        .arrow-submit-btn:hover { background: #00e5ff; transform: scale(1.1); }
+        .arrow-submit-btn:active { transform: scale(0.9); }
+        .arrow-submit-btn svg { width: 16px; height: 16px; stroke: black; stroke-width: 2.5; fill: none; }
+
+        .signup-link {
+            font-size: 0.7rem; color: var(--teal); 
+            text-decoration: none; cursor: pointer;
+            opacity: 0.8; transition: opacity 0.3s;
+            letter-spacing: 0.5px; text-shadow: 0 1px 2px black;
+        }
+        .signup-link:hover { opacity: 1; text-decoration: underline; }
+
+        .shake { animation: shake 0.5s; border-color: var(--red) !important; }
+        @keyframes shake { 0% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } 100% { transform: translateX(0); } }
+
+        /* --- LOGGED IN TRANSITIONS --- */
+        body.logged-in #bg-pattern { opacity: 1; }
+        body.logged-in #bg-orange { opacity: 0; }
+        
+        /* Paw Fades Out */
+        body.logged-in #login-container { opacity: 0; transform: scale(1.5); pointer-events: none; }
+        
+        /* Turtle Fades In */
+        body.logged-in #turtle-content { opacity: 1; transform: scale(1); pointer-events: auto; }
+
+        /* --- CONTACT & LOGOUT BUTTONS --- */
         .contact-icon {
             position: fixed; bottom: 20px; right: 20px;
             width: 50px; height: 50px;
             background: white; border-radius: 50%;
             display: flex; justify-content: center; align-items: center;
             box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-            z-index: 100; transition: transform 0.2s ease, box-shadow 0.2s ease;
+            z-index: 100; transition: transform 0.2s ease;
             text-decoration: none;
         }
-        .contact-icon:hover { transform: scale(1.1); box-shadow: 0 6px 16px rgba(0,0,0,0.6); }
-        .contact-icon:active { transform: scale(0.95); }
-        .contact-icon svg {
-            width: 26px; height: 26px; stroke: var(--red);
-            stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round;
-        }
+        .contact-icon:hover { transform: scale(1.1); }
+        .contact-icon svg { width: 26px; height: 26px; stroke: var(--red); stroke-width: 2; fill: none; }
 
-        /* --- MAIN LAYOUT --- */
-        #main-container {
-            position: absolute; top: 0; left: 0; 
-            width: 100%; height: 100dvh;
-            z-index: 10; display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            gap: 20px; padding: 20px;
-            transition: all 1s ease;
-            pointer-events: none; /* Let clicks pass to turtle */
+        .logout-btn {
+            position: fixed; right: 20px; bottom: 72.5px; 
+            width: 50px; height: 50px;
+            background: var(--teal); border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            z-index: 100; cursor: pointer; transition: all 0.3s ease;
+            opacity: 0; pointer-events: none; transform: translateY(10px);
         }
+        body.logged-in .logout-btn { opacity: 1; pointer-events: auto; transform: translateY(0); }
+        .logout-btn:hover { transform: scale(1.1); }
+        .logout-btn svg { width: 24px; height: 24px; stroke: white; stroke-width: 2.5; fill: none; }
 
-        /* --- FEATHER --- */
-        .feather-wrapper {
-            width: 95%; max-width: 650px; height: auto;
-            z-index: 12; transition: all 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            filter: drop-shadow(0 15px 25px rgba(0,0,0,0.8));
-            flex-shrink: 0; pointer-events: none;
-        }
-
-        /* --- UPGRADED LOGIN CARD (Obsidian Glass) --- */
-        #login-card {
-            position: relative;
-            background: rgba(10, 10, 10, 0.65); /* Dark semi-transparent */
-            backdrop-filter: blur(12px); /* Frosted Glass */
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 20px; 
-            text-align: center;
-            width: 100%; max-width: 380px;
-            
-            /* Glass Border */
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.9);
-            
-            z-index: 11; opacity: 1; transform: translateY(0);
-            transition: all 0.8s ease;
-            display: flex; flex-direction: column; gap: 20px;
-            padding: 40px 30px;
-            pointer-events: auto;
-            overflow: hidden;
-        }
-
-        /* Animated Gradient Border Glow */
-        #login-card::after {
-            content: '';
-            position: absolute; top: 0; left: 0; right: 0; height: 3px;
-            background: linear-gradient(90deg, var(--red), var(--gold), var(--teal), var(--orange));
-            background-size: 300% 100%;
-            animation: shimmer 4s infinite linear;
-        }
-        @keyframes shimmer { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
-
-        @media (min-width: 768px) {
-            #login-card { padding: 50px 60px; }
-            #main-container { gap: 40px; }
-        }
-
-        .login-header {
-            color: var(--gold); 
-            font-size: 0.85rem; letter-spacing: 3px; text-transform: uppercase;
-            margin-bottom: 5px; font-family: sans-serif;
-            text-shadow: 0 0 10px rgba(255, 179, 38, 0.4);
-        }
-
-        #password-input {
-            background: rgba(255, 255, 255, 0.05);
-            border: none; border-radius: 8px;
-            border-bottom: 2px solid rgba(255,255,255,0.2); 
-            color: white;
-            font-size: 1.2rem; padding: 15px; text-align: center;
-            font-family: sans-serif; outline: none; 
-            transition: all 0.3s; width: 100%;
-        }
-        #password-input:focus { 
-            background: rgba(255, 255, 255, 0.1);
-            border-bottom: 2px solid var(--teal); 
-            box-shadow: 0 5px 15px rgba(0, 184, 200, 0.2);
-        }
-        #password-input::placeholder { color: rgba(255,255,255,0.3); font-size: 1rem; }
-
-        /* Neon Primary Button */
-        .login-btn {
-            background: linear-gradient(90deg, #f37021, #e63923);
-            color: white; border: none; padding: 16px;
-            font-size: 1rem; font-weight: bold; letter-spacing: 1px;
-            border-radius: 12px; cursor: pointer;
-            transition: all 0.3s; width: 100%;
-            box-shadow: 0 5px 15px rgba(230, 57, 35, 0.3);
-        }
-        .login-btn:hover { 
-            transform: translateY(-2px); 
-            box-shadow: 0 10px 25px rgba(230, 57, 35, 0.5); 
-        }
-        
-        /* Ghost Secondary Button */
-        .signup-btn {
-            background: transparent;
-            color: rgba(255,255,255,0.7); 
-            border: 1px solid rgba(255,255,255,0.2);
-            padding: 12px; font-size: 0.85rem; font-weight: normal; letter-spacing: 0.5px;
-            border-radius: 12px; cursor: pointer;
-            transition: all 0.3s; width: 100%;
-        }
-        .signup-btn:hover { 
-            border-color: var(--teal); color: var(--teal); 
-            background: rgba(0, 184, 200, 0.05);
-            box-shadow: 0 0 15px rgba(0, 184, 200, 0.2);
-        }
-        
-        .shake { animation: shake 0.5s; border-bottom-color: red !important; }
-        @keyframes shake { 0% { transform: translateX(0); } 25% { transform: translateX(-10px); } 50% { transform: translateX(10px); } 75% { transform: translateX(-10px); } 100% { transform: translateX(0); } }
-
-        /* --- TURTLE & WHEEL --- */
+        /* --- TURTLE & WHEEL STYLES --- */
         #turtle-content {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; justify-content: center; align-items: center;
@@ -178,22 +190,11 @@
         }
         .wheel-container {
             width: 90vmin; height: 90vmin;
-            max-width: 650px; max-height: 650px;
-            margin-top: 120px;
+            max-width: 650px; max-height: 650px; margin-top: 120px;
         }
 
-        /* --- LOGGED IN STATE --- */
-        body.logged-in #bg-pattern { opacity: 1; }
-        body.logged-in #bg-orange { opacity: 0; }
-        body.logged-in .feather-wrapper {
-            position: absolute; top: 10px; transform: none; margin: 0;
-            width: 80%; max-width: 400px;
-        }
-        body.logged-in #login-card { opacity: 0; transform: translateY(50px); pointer-events: none; }
-        body.logged-in #turtle-content { opacity: 1; transform: scale(1); pointer-events: auto; }
-
-        /* SVG & ANIMATIONS */
         svg { overflow: visible; width: 100%; height: 100%; }
+        
         .inscribed-text {
             font-family: "Palatino Linotype", serif; font-weight: bold; font-size: 45px;
             fill: url(#verticalTextGrad); stroke: black; stroke-width: 0.5px;
@@ -201,110 +202,56 @@
             filter: url(#textRoughness);
         }
 
+        .hit-area { cursor: pointer; touch-action: manipulation; }
+        .scale-group { transform-origin: 50px 50px; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .hit-area:hover .scale-group { transform: scale(1.08); filter: drop-shadow(0 0 4px rgba(0,0,0,0.5)); }
+        
+        .wheel-text {
+            font-family: "Palatino Linotype", serif; font-weight: bold; font-size: 3.0px;
+            text-anchor: middle; pointer-events: none; fill: black;
+        }
+        .text-white { fill: white; }
+
+        .resources-active .shell-regular { opacity: 0.3; transition: opacity 0.3s; }
+        .resource-plate {
+            cursor: default; transition: all 0.4s;
+            fill: url(#shellGradient); stroke: black; stroke-width: 0.3px;
+        }
+        .resources-active .btn-group { cursor: pointer; }
+        .resources-active .resource-plate {
+            fill: url(#amberGradient) !important; stroke: #ffcc00; stroke-width: 1px;
+            filter: drop-shadow(0 0 5px rgba(255, 165, 0, 0.6));
+        }
+        .resources-active .btn-group:hover .resource-plate { transform: scale(1.02); }
+        
+        .week-label {
+            font-family: sans-serif; font-weight: bold; font-size: 2.5px;
+            fill: #4a3b00; text-anchor: middle; dominant-baseline: middle;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+        }
+        .resources-active .week-label { opacity: 1; }
+
+        #medicine-wheel, #info-overlay {
+            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            transform-origin: 50px 50px;
+        }
+        #medicine-wheel { transform: rotate(-45deg) scale(1); opacity: 1; }
+        .info-active #medicine-wheel { transform: rotate(-180deg) scale(0); opacity: 0; pointer-events: none; }
+        .info-active #info-overlay { transform: scale(1); opacity: 1; pointer-events: auto; }
+        .back-btn:hover circle { fill: #007780; }
+
+        .info-content-style {
+            display: flex; justify-content: center; align-items: center; 
+            height: 100%; text-align: center; color: #222; 
+            font-family: 'Palatino Linotype', serif; font-size: 3.25px; line-height: 1.4; padding: 15px;
+        }
+        
         @keyframes swim-out { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-6deg); } }
         @keyframes swim-in { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(6deg); } }
         .leg-fl { transform-origin: 25px 38px; animation: swim-out 3s ease-in-out infinite; }
         .leg-fr { transform-origin: 75px 38px; animation: swim-in 3s ease-in-out infinite; }
         .leg-bl { transform-origin: 25px 62px; animation: swim-in 3.5s ease-in-out infinite; }
         .leg-br { transform-origin: 75px 62px; animation: swim-out 3.5s ease-in-out infinite; }
-
-        /* --- INTERACTIVE WHEEL --- */
-        .hit-area { cursor: pointer; touch-action: manipulation; }
-        
-        .scale-group {
-            transform-origin: 50px 50px;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .hit-area:hover .scale-group {
-            transform: scale(1.08); filter: drop-shadow(0 0 4px rgba(0,0,0,0.5));
-        }
-        .hit-area:active .scale-group {
-            transform: scale(0.98); filter: none; transition: transform 0.05s ease-out;
-        }
-
-        /* TEXT INSIDE WHEEL */
-        .wheel-text {
-            font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
-            font-weight: bold; font-size: 2.8px; text-anchor: middle;
-            pointer-events: none; fill: black;
-        }
-        .text-white { fill: white; }
-
-        /* --- RESOURCE MODE STYLES --- */
-        .resources-active .shell-regular {
-            opacity: 0.3; /* Dim non-active plates */
-            transition: opacity 0.3s;
-        }
-        .resource-plate {
-            cursor: default; 
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            fill: url(#shellGradient); /* Standard Shell Color */
-            stroke: black; stroke-width: 0.3px;
-        }
-        .resources-active .btn-group { cursor: pointer; }
-        
-        .resources-active .resource-plate {
-            fill: url(#amberGradient) !important;
-            stroke: #ffcc00;
-            stroke-width: 1px;
-            filter: drop-shadow(0 0 5px rgba(255, 165, 0, 0.6));
-        }
-        .resources-active .btn-group:hover .resource-plate {
-            transform: scale(1.02); 
-            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.9));
-        }
-
-        /* The Week Text Labels */
-        .week-label {
-            font-family: "Palatino Linotype", sans-serif;
-            font-weight: bold; font-size: 2.5px;
-            fill: #4a3b00; text-anchor: middle; dominant-baseline: middle;
-            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
-        }
-        .resources-active .week-label { opacity: 1; }
-
-        /* --- INFO TRANSFORMATION MODE --- */
-        #medicine-wheel, #info-overlay {
-            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            transform-origin: 50px 50px; /* Force Center */
-        }
-        
-        /* Default Wheel State */
-        #medicine-wheel {
-            transform: rotate(-45deg) scale(1);
-            opacity: 1;
-        }
-        
-        /* When Info Active: Hide Wheel */
-        .info-active #medicine-wheel {
-            transform: rotate(-180deg) scale(0); /* Rotate while shrinking */
-            opacity: 0; pointer-events: none;
-        }
-        
-        /* When Info Active: Show Info Overlay */
-        .info-active #info-overlay {
-            transform: scale(1);
-            opacity: 1; pointer-events: auto;
-        }
-        
-        /* Back Button Animation */
-        .back-btn:hover circle { fill: #007780; } /* Darker teal on hover */
-
-        /* --- MISSING STYLE FIXED HERE --- */
-        /* This controls the text inside the expanding circle */
-        .info-content-style {
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100%; 
-            text-align: center; 
-            color: #222; 
-            font-family: 'Palatino Linotype', serif; 
-            font-size: 3.0px; /* Adjust text size here */
-            line-height: 1.4; 
-            padding: 15px;
-        }
-
     </style>
 </head>
 <body>
@@ -314,303 +261,207 @@
 
 <div style="display:none;">מִזְמור לְדָוִד ה׳ רֹעִי לֹא אֶחְסָר</div>
 
-<div id="main-container">
-    <div class="feather-wrapper">
-        <svg viewBox="0 0 900 300" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <filter id="barbTexture" x="-20%" y="-20%" width="140%" height="140%">
-                    <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="3" result="noise" />
-                    <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" xChannelSelector="R" yChannelSelector="G" />
-                </filter>
-                <filter id="textRoughness">
-                    <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" result="noisy" />
-                    <feDisplacementMap in="SourceGraphic" in2="noisy" scale="1" />
-                    <feGaussianBlur stdDeviation="0.5" in="SourceAlpha" result="blur"/>
-                    <feOffset dx="0.5" dy="0.5" result="offsetBlur"/>
-                    <feComposite in="SourceGraphic" in2="offsetBlur" operator="over"/>
-                </filter>
-                <linearGradient id="featherGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" style="stop-color:#ffffff; stop-opacity:1" />
-                    <stop offset="15%" style="stop-color:#e6e6e6; stop-opacity:1" />
-                    <stop offset="40%" style="stop-color:#786d5f; stop-opacity:1" />
-                    <stop offset="70%" style="stop-color:#3e3025; stop-opacity:1" />
-                    <stop offset="100%" style="stop-color:#1a1a1a; stop-opacity:1" />
-                </linearGradient>
-               <linearGradient id="verticalTextGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="white"/>
-                <stop offset="35%" stop-color="#e63923"/> <stop offset="65%" stop-color="#ffb326"/> <stop offset="100%" stop-color="black"/>
-                </linearGradient>
-                <linearGradient id="spineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" style="stop-color:#fcfcfc; stop-opacity:1" />
-                    <stop offset="20%" style="stop-color:#8b7e6e; stop-opacity:1" />
-                    <stop offset="100%" style="stop-color:#3d3d3d; stop-opacity:1" />
-                </linearGradient>
-                <mask id="solidMask">
-                    <rect x="0" y="0" width="900" height="300" fill="white" />
-                </mask>
-            </defs>
-            <g filter="url(#barbTexture)" mask="url(#solidMask)">
-                <path d="M50,150 C 100,130 300,80 500,70 C 700,60 850,150 850,150 L 50,150 Z" fill="url(#featherGrad)" />
-                <path d="M50,150 C 100,180 300,240 500,230 C 700,220 850,150 850,150 L 50,150 Z" fill="url(#featherGrad)" />
-            </g>
-            <path d="M45,150 Q 400,152 855,150 L 855,151 Q 400,148 45,149 Z" fill="url(#spineGrad)" />
-            <g id="fluff-container" stroke="#fff" stroke-width="0.8" fill="none" opacity="0.9"></g>
-            <text x="450" y="150" class="inscribed-text">TATAWAW TEACHINGS</text>
-        </svg>
-    </div>
+<div class="feather-wrapper">
+    <svg viewBox="0 0 900 300" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <filter id="barbTexture" x="-20%" y="-20%" width="140%" height="140%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="3" result="noise" />
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+            <filter id="textRoughness">
+                <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" result="noisy" />
+                <feDisplacementMap in="SourceGraphic" in2="noisy" scale="1" />
+                <feGaussianBlur stdDeviation="0.5" in="SourceAlpha" result="blur"/>
+                <feOffset dx="0.5" dy="0.5" result="offsetBlur"/>
+                <feComposite in="SourceGraphic" in2="offsetBlur" operator="over"/>
+            </filter>
+            <linearGradient id="featherGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#ffffff; stop-opacity:1" />
+                <stop offset="15%" style="stop-color:#e6e6e6; stop-opacity:1" />
+                <stop offset="40%" style="stop-color:#786d5f; stop-opacity:1" />
+                <stop offset="70%" style="stop-color:#3e3025; stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#1a1a1a; stop-opacity:1" />
+            </linearGradient>
+           <linearGradient id="verticalTextGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="white"/>
+            <stop offset="35%" stop-color="#e63923"/> <stop offset="65%" stop-color="#ffb326"/> <stop offset="100%" stop-color="black"/>
+            </linearGradient>
+            <linearGradient id="spineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#fcfcfc; stop-opacity:1" />
+                <stop offset="20%" style="stop-color:#8b7e6e; stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#3d3d3d; stop-opacity:1" />
+            </linearGradient>
+            <mask id="solidMask"><rect x="0" y="0" width="900" height="300" fill="white" /></mask>
+        </defs>
+        <g filter="url(#barbTexture)" mask="url(#solidMask)">
+            <path d="M50,150 C 100,130 300,80 500,70 C 700,60 850,150 850,150 L 50,150 Z" fill="url(#featherGrad)" />
+            <path d="M50,150 C 100,180 300,240 500,230 C 700,220 850,150 850,150 L 50,150 Z" fill="url(#featherGrad)" />
+        </g>
+        <path d="M45,150 Q 400,152 855,150 L 855,151 Q 400,148 45,149 Z" fill="url(#spineGrad)" />
+        <g id="fluff-container" stroke="#fff" stroke-width="0.8" fill="none" opacity="0.9"></g>
+        <text x="450" y="150" class="inscribed-text">TATAWAW TEACHINGS</text>
+    </svg>
+</div>
 
-    <div id="login-card">
-        <div class="login-header">Secure Access</div>
-        <input type="password" id="password-input" placeholder="Enter Password" onkeypress="handleEnter(event)">
-        <button class="login-btn" onclick="attemptLogin()">ENTER PORTAL</button>
-        
-        <div style="width: 100%; height: 1px; background: rgba(255,255,255,0.1); margin: 5px 0;"></div>
-        
-        <button class="signup-btn" onclick="openSignup()">New Student? Sign Up</button>
+<div id="login-container">
+    <div id="paw-wrapper">
+        <svg class="bear-svg" viewBox="0 0 2048 2048" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <radialGradient id="pawGrad" cx="50%" cy="50%" r="70%">
+                    <stop offset="0%" stop-color="#333" />
+                    <stop offset="100%" stop-color="#0a0a0a" />
+                </radialGradient>
+            </defs>
+            <path d="M 230.64 997.394 C 287.727 994.786 346.636 1027.35 388.408 1065.14 C 466.167 1135.48 519.691 1245.86 526.507 1350.54 C 531.906 1433.46 497.696 1533.66 401.64 1539.84 C 351.326 1542.02 300.784 1518.74 261.936 1487.94 C 178.905 1421.76 121.284 1319.02 107.524 1213.82 C 95.2344 1119.87 120.675 1009.66 230.64 997.394 z M 1827.51 582.42 C 1860.35 578.635 1888.08 588.665 1914.5 607.397 C 1976.28 651.193 2007.34 729.858 2019.64 801.955 C 2036.01 897.97 2022.33 1012.99 1963.5 1092.94 C 1936.78 1129.26 1905.24 1153.49 1860.25 1160.88 C 1821.83 1163.68 1795.57 1155.46 1764.61 1131.64 C 1703.27 1084.46 1671.72 997.416 1662.39 922.531 C 1651.08 831.708 1667.58 718.588 1724.96 644.456 C 1750.26 611.769 1786.05 587.648 1827.51 582.42 z M 1414.83 347.387 C 1452.04 345.064 1479.15 354.237 1508.02 378.486 C 1565.58 426.824 1591.89 509.328 1598.7 582.437 C 1607.63 678.375 1586.95 785.097 1525.39 861.584 C 1497.58 896.136 1459.81 920.331 1415.24 924.381 C 1385.23 926.375 1349.07 913.354 1326.6 893.691 C 1233.28 812.042 1216.83 658.276 1244.54 544.379 C 1265.41 458.601 1319.35 357.66 1414.83 347.387 z M 912.553 357.413 C 954.14 354.914 996.16 377.344 1026.35 403.757 C 1107.96 475.677 1146 585.287 1151.78 691.532 C 1156.74 782.766 1123.35 920.702 1012.47 927.096 C 870.555 927.709 785.965 749.516 772.545 627.891 C 761.054 523.755 785.328 370.705 912.553 357.413 z M 468.595 594.415 C 521.857 589.134 580.332 619.794 621.312 651.849 C 704.533 717.226 762.463 818.012 776.437 922.947 C 783.507 976.039 776.661 1039.14 740.554 1081.39 C 718.603 1107.08 689.691 1117.97 656.87 1121.96 C 596.656 1123.72 541.621 1097.18 495.905 1059.61 C 414.161 991.514 356.312 891.507 344.874 785.246 C 335.29 696.213 368.138 603.354 468.595 594.415 z M 1708.02 250.505 C 1717.07 252.826 1744.23 272.611 1752.7 279.252 C 1849.76 355.364 1895.28 453.983 1912.49 572.885 C 1887.86 562.021 1824.1 548.355 1797.63 547.85 C 1800.21 514.476 1792.1 489.584 1783.55 457.868 C 1769.17 404.505 1750.15 352.635 1729.38 301.46 C 1724.34 289.033 1714.74 260.645 1708.02 250.505 z M 129.384 660.621 C 131.214 665.566 135.407 711.528 136.675 720.637 C 145.813 786.271 159.835 906.862 196.045 962.115 C 166.979 982.546 148.682 997.839 123.412 1022.71 C 117.967 1028.75 112.419 1034.7 106.77 1040.55 C 99.3865 1021.39 93.0263 1001.85 87.7163 982.021 C 58.2273 869.739 70.8802 760.895 129.384 660.621 z M 426.646 238.839 C 426.807 240.403 425.81 253.714 425.666 256.5 C 425.005 268.902 424.619 281.316 424.507 293.735 C 424.474 337.888 426.115 382.027 429.427 426.056 C 432.991 471.168 436.506 511.981 459.516 552.319 C 446.006 560.184 428.872 567.578 414.708 574.909 C 399.378 582.843 387.021 590.349 372.439 599.621 L 361.414 607.149 C 333.289 499.779 339.886 374.096 398.35 277.588 C 405.536 265.727 416.9 248.399 426.646 238.839 z M 1257.69 20.1277 C 1372.09 70.4232 1445.95 163.076 1483.59 281.583 C 1485.51 287.621 1492.17 307.313 1492.27 312.557 L 1489.76 313.022 C 1457.02 304.194 1412.91 305.254 1379.93 312.059 C 1380.71 296.349 1379.19 280.608 1375.42 265.337 C 1360.55 203.105 1311.09 118.167 1281.22 61.0668 C 1274.44 48.115 1264.57 34.5554 1258.11 21.0409 L 1257.69 20.1277 z M 684.215 2027.1 C 687.187 2028.49 689.338 2028.98 692.469 2029.92 L 693.25 2031.48 L 692.018 2032.46 L 690.633 2031.11 L 687.42 2033.22 L 686.213 2032.33 C 687.998 2032.58 687.267 2032.75 688.463 2032.22 L 686.416 2031.84 C 685.707 2030.25 684.973 2028.67 684.215 2027.1 z M 765.586 2048 C 749.43 2044.71 732.235 2042.2 716.797 2036.58 C 655.339 2014.23 611.063 1965.33 576.011 1912.19 C 526.719 1837.45 488.958 1743.04 507.582 1652.42 C 528.151 1552.33 604.123 1476.05 683.231 1417.29 C 716.389 1392.66 751.649 1372.33 773.55 1335.84 C 785.605 1315.75 793.301 1289.12 797.507 1266.25 C 802.214 1240.66 804.749 1214.23 808.414 1188.42 C 817.358 1125.4 850.744 1076.68 904.345 1042.26 C 985.559 990.117 1134.51 950.8 1229.59 950.488 C 1250.87 950.42 1272.1 952.674 1292.89 957.21 C 1407.36 982.011 1445.5 1077.03 1540.94 1129.02 C 1601.28 1161.89 1681.72 1170.91 1748.84 1191.52 C 1841.65 1220.02 1935.05 1252.28 1990.51 1339.19 C 2029.83 1400.78 2030.02 1470.74 2020.8 1540.38 C 2009.33 1626.96 1984.07 1719.29 1904.18 1767.74 C 1826.78 1814.68 1729.51 1809 1642.5 1806.32 C 1541.71 1803.19 1437 1795.72 1337.94 1819.29 C 1240.09 1842.57 1148.32 1893.01 1060.46 1940.95 C 985.679 1981.76 909.248 2026.84 824.6 2043.81 C 817.024 2045.32 809.398 2046.41 801.832 2048 L 765.586 2048 z M 796.808 0 L 797.642 0 C 804.287 17.0738 818.057 43.1609 825.98 60.2786 C 864.22 142.891 912.853 224.218 939.852 311.388 L 918.314 310.208 C 880.655 308.36 846.874 316.83 818.634 342.438 C 800.613 277.063 797.419 237.706 797.074 169.638 L 797.161 66.8031 C 797.178 55.5145 795.732 6.08495 796.808 0 z" 
+                  fill="url(#pawGrad)" stroke="#ffb326" stroke-width="15" />
+        </svg>
+
+        <div id="paw-form">
+            <div class="input-wrapper">
+                <input type="password" id="password-input" placeholder="Creator" onkeypress="handleEnter(event)">
+                <button class="arrow-submit-btn" onclick="attemptLogin()" aria-label="Enter">
+                    <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+            </div>
+            <div class="signup-link" onclick="openSignup()">New Student? Sign Up</div>
+        </div>
     </div>
 </div>
 
 <a href="mailto:makwalittlespoon@gmail.com" class="contact-icon" aria-label="Contact Us">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-        <polyline points="22,6 12,13 2,6"></polyline>
-    </svg>
+    <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
 </a>
+
+<div class="logout-btn" onclick="logout()" aria-label="Back to Login">
+    <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" stroke-linecap="round" stroke-linejoin="round"></path><polyline points="16 17 21 12 16 7" stroke-linecap="round" stroke-linejoin="round"></polyline><line x1="21" y1="12" x2="9" y2="12" stroke-linecap="round" stroke-linejoin="round"></line></svg>
+</div>
 
 <div id="turtle-content">
     <div class="wheel-container">
         <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
             <defs>
                 <radialGradient id="shellGradient" cx="50%" cy="50%" r="60%" fx="50%" fy="50%">
-                    <stop offset="0%" stop-color="#ccff33" /> 
-                    <stop offset="60%" stop-color="#32CD32" /> 
-                    <stop offset="95%" stop-color="#006400" />
+                    <stop offset="0%" stop-color="#ccff33" /> <stop offset="60%" stop-color="#32CD32" /> <stop offset="95%" stop-color="#006400" />
                 </radialGradient>
                 <radialGradient id="skinGradient" cx="30%" cy="30%" r="80%">
-                    <stop offset="0%" stop-color="#76c950" />
-                    <stop offset="100%" stop-color="#1a4d1a" />
+                    <stop offset="0%" stop-color="#76c950" /> <stop offset="100%" stop-color="#1a4d1a" />
                 </radialGradient>
                 <radialGradient id="amberGradient" cx="50%" cy="50%" r="60%" fx="50%" fy="50%">
-                    <stop offset="0%" stop-color="#fff7cc" /> 
-                    <stop offset="40%" stop-color="#ffbf00" /> 
-                    <stop offset="100%" stop-color="#b35900" /> 
+                    <stop offset="0%" stop-color="#fff7cc" /> <stop offset="40%" stop-color="#ffbf00" /> <stop offset="100%" stop-color="#b35900" /> 
                 </radialGradient>
-
                 <radialGradient id="infoGradient" cx="50%" cy="50%" r="50%">
-                    <stop offset="70%" stop-color="#fffdf5" /> 
-                    <stop offset="85%" stop-color="#ccff33" /> 
-                    <stop offset="100%" stop-color="#32CD32" /> 
+                    <stop offset="70%" stop-color="#fffdf5" /> <stop offset="85%" stop-color="#ccff33" /> <stop offset="100%" stop-color="#32CD32" /> 
                 </radialGradient>
-
                 <path id="scute-shape" d="M -8.5 36 L -12 48.5 Q 0 50 12 48.5 L 8.5 36 Q 0 35 -8.5 36 Z" />
             </defs>
 
             <g id="body-parts" fill="url(#skinGradient)" stroke="black" stroke-width="0.5">
-                <g id="head">
-                    <path d="M 38 12 L 38 25 L 62 25 L 62 12 Z" stroke="none" /> 
-                    <path d="M 35 12 C 35 -8, 65 -8, 65 12 L 62 20 L 38 20 Z" />
-                    <circle cx="38" cy="4" r="2" fill="black" stroke="none"/>
-                    <circle cx="62" cy="4" r="2" fill="black" stroke="none"/>
-                </g>
+                <g id="head"><path d="M 38 12 L 38 25 L 62 25 L 62 12 Z" stroke="none" /><path d="M 35 12 C 35 -8, 65 -8, 65 12 L 62 20 L 38 20 Z" /><circle cx="38" cy="4" r="2" fill="black" stroke="none"/><circle cx="62" cy="4" r="2" fill="black" stroke="none"/></g>
                 <path class="leg-fl" d="M 15 20 C 0 5, -10 15, 2 35 L 5 31 L 3 37 L 7 34 L 7 39 L 25 38 Z" />
                 <path class="leg-fr" d="M 85 20 C 100 5, 110 15, 98 35 L 95 31 L 97 37 L 93 34 L 93 39 L 75 38 Z" />
                 <path class="leg-bl" d="M 15 80 C 0 95, -10 85, 2 65 L 5 69 L 3 63 L 7 66 L 7 61 L 25 62 Z" />
                 <path class="leg-br" d="M 85 80 C 100 95, 110 85, 98 65 L 95 69 L 97 63 L 93 66 L 93 61 L 75 62 Z" />
                 <path d="M 45 88 Q 48 110 58 100 L 55 88 Z" />
             </g>
-
             <circle cx="50" cy="50" r="49" fill="#003300" stroke="black" stroke-width="0.8"/>
             
             <g id="shell-plates" stroke="black" stroke-width="0.3">
                 <g class="shell-regular" fill="url(#shellGradient)">
-                    <use href="#scute-shape" transform="translate(50,50) rotate(0)"/> 
-                    <use href="#scute-shape" transform="translate(50,50) rotate(27.7)"/> 
-                    <use href="#scute-shape" transform="translate(50,50) rotate(55.4)"/>
-                    <use href="#scute-shape" transform="translate(50,50) rotate(83.1)"/>
-                    <use href="#scute-shape" transform="translate(50,50) rotate(110.8)"/>
-                    <use href="#scute-shape" transform="translate(50,50) rotate(249.2)"/>
-                    <use href="#scute-shape" transform="translate(50,50) rotate(276.9)"/>
-                    <use href="#scute-shape" transform="translate(50,50) rotate(304.6)"/>
-                    <use href="#scute-shape" transform="translate(50,50) rotate(332.3)"/>
+                    <use href="#scute-shape" transform="translate(50,50) rotate(0)"/> <use href="#scute-shape" transform="translate(50,50) rotate(27.7)"/> <use href="#scute-shape" transform="translate(50,50) rotate(55.4)"/> <use href="#scute-shape" transform="translate(50,50) rotate(83.1)"/> <use href="#scute-shape" transform="translate(50,50) rotate(110.8)"/> <use href="#scute-shape" transform="translate(50,50) rotate(249.2)"/> <use href="#scute-shape" transform="translate(50,50) rotate(276.9)"/> <use href="#scute-shape" transform="translate(50,50) rotate(304.6)"/> <use href="#scute-shape" transform="translate(50,50) rotate(332.3)"/>
                 </g>
                 <g id="week-buttons">
-                    <g class="btn-group" onclick="openWeekDoc(1)" transform="translate(50,50) rotate(138.5)">
-                        <use class="resource-plate" href="#scute-shape"/>
-                        <text class="week-label" x="0" y="42" transform="rotate(-138.5 0 42)">WK 1</text>
-                    </g>
-                    <g class="btn-group" onclick="openWeekDoc(2)" transform="translate(50,50) rotate(166.2)">
-                        <use class="resource-plate" href="#scute-shape"/>
-                        <text class="week-label" x="0" y="42" transform="rotate(-166.2 0 42)">WK 2</text>
-                    </g>
-                     <g class="btn-group" onclick="openWeekDoc(3)" transform="translate(50,50) rotate(193.9)">
-                        <use class="resource-plate" href="#scute-shape"/>
-                        <text class="week-label" x="0" y="42" transform="rotate(-193.9 0 42)">WK 3</text>
-                    </g>
-                    <g class="btn-group" onclick="openWeekDoc(4)" transform="translate(50,50) rotate(221.5)">
-                        <use class="resource-plate" href="#scute-shape"/>
-                        <text class="week-label" x="0" y="42" transform="rotate(-221.5 0 42)">WK 4</text>
-                    </g>
+                    <g class="btn-group" onclick="openWeekDoc(1)" transform="translate(50,50) rotate(138.5)"><use class="resource-plate" href="#scute-shape"/><text class="week-label" x="0" y="42" transform="rotate(-138.5 0 42)">WK 1</text></g>
+                    <g class="btn-group" onclick="openWeekDoc(2)" transform="translate(50,50) rotate(166.2)"><use class="resource-plate" href="#scute-shape"/><text class="week-label" x="0" y="42" transform="rotate(-166.2 0 42)">WK 2</text></g>
+                    <g class="btn-group" onclick="openWeekDoc(3)" transform="translate(50,50) rotate(193.9)"><use class="resource-plate" href="#scute-shape"/><text class="week-label" x="0" y="42" transform="rotate(-193.9 0 42)">WK 3</text></g>
+                    <g class="btn-group" onclick="openWeekDoc(4)" transform="translate(50,50) rotate(221.5)"><use class="resource-plate" href="#scute-shape"/><text class="week-label" x="0" y="42" transform="rotate(-221.5 0 42)">WK 4</text></g>
                 </g>
             </g>
 
             <g id="medicine-wheel">
                 <circle cx="50" cy="50" r="36" fill="#003300" stroke="none"/>
-                
-                <g class="hit-area" onclick="openInfo('mission')">
-                    <g class="scale-group">
-                        <path class="quadrant q-north" d="M50,50 L50,15 A35,35 0 0 1 85,50 Z" fill="#FFFFFF" stroke="black" stroke-width="0.5"/>
-                        <text class="wheel-text" x="67" y="33" transform="rotate(45, 67, 33)">
-                            <tspan x="67" dy="-1.5">Our Mission</tspan><tspan x="67" dy="3.5">& Vision</tspan>
-                        </text>
-                    </g>
-                </g>
-
-                <g class="hit-area" onclick="openInfo('about')">
-                    <g class="scale-group">
-                        <path class="quadrant q-east" d="M50,50 L85,50 A35,35 0 0 1 50,85 Z" fill="#E31E24" stroke="black" stroke-width="0.5"/>
-                        <text class="wheel-text text-white" x="67" y="67" transform="rotate(45, 67, 67)">
-                            <tspan x="67" dy="1">About Us</tspan>
-                        </text>
-                    </g>
-                </g>
-
-                <g class="hit-area" onclick="toggleResources()">
-                    <g class="scale-group">
-                        <path class="quadrant q-south" d="M50,50 L50,85 A35,35 0 0 1 15,50 Z" fill="#FDEC00" stroke="black" stroke-width="0.5"/>
-                        <text class="wheel-text" x="33" y="67" transform="rotate(45, 33, 67)">
-                            <tspan x="33" dy="-1.5">Teaching</tspan><tspan x="33" dy="3.5">Resources</tspan>
-                        </text>
-                    </g>
-                </g>
-
-                <g class="hit-area" onclick="openInfo('tolerance')">
-                    <g class="scale-group">
-                        <path class="quadrant q-west" d="M50,50 L15,50 A35,35 0 0 1 50,15 Z" fill="#000000" stroke="black" stroke-width="0.5"/>
-                        <text class="wheel-text text-white" x="33" y="33" transform="rotate(45, 33, 33)">
-                            <tspan x="33" dy="-1.5">Tolerance</tspan><tspan x="33" dy="3.5">Policy</tspan>
-                        </text>
-                    </g>
-                </g>
-
+                <g class="hit-area" onclick="openInfo('mission')"><g class="scale-group"><path class="quadrant q-north" d="M50,50 L50,15 A35,35 0 0 1 85,50 Z" fill="#FFFFFF" stroke="black" stroke-width="0.5"/><text class="wheel-text" x="67" y="33" transform="rotate(45, 67, 33)"><tspan x="67" dy="-1.5">Our Mission</tspan><tspan x="67" dy="3.5">& Vision</tspan></text></g></g>
+                <g class="hit-area" onclick="openInfo('about')"><g class="scale-group"><path class="quadrant q-east" d="M50,50 L85,50 A35,35 0 0 1 50,85 Z" fill="#E31E24" stroke="black" stroke-width="0.5"/><text class="wheel-text text-white" x="67" y="67" transform="rotate(45, 67, 67)"><tspan x="67" dy="1">About Us</tspan></text></g></g>
+                <g class="hit-area" onclick="toggleResources()"><g class="scale-group"><path class="quadrant q-south" d="M50,50 L50,85 A35,35 0 0 1 15,50 Z" fill="#FDEC00" stroke="black" stroke-width="0.5"/><text class="wheel-text" x="33" y="67" transform="rotate(45, 33, 67)"><tspan x="33" dy="-1.5">Teaching</tspan><tspan x="33" dy="3.5">Resources</tspan></text></g></g>
+                <g class="hit-area" onclick="openInfo('tolerance')"><g class="scale-group"><path class="quadrant q-west" d="M50,50 L15,50 A35,35 0 0 1 50,15 Z" fill="#000000" stroke="black" stroke-width="0.5"/><text class="wheel-text text-white" x="33" y="33" transform="rotate(45, 33, 33)"><tspan x="33" dy="-1.5">Tolerance</tspan><tspan x="33" dy="3.5">Policy</tspan></text></g></g>
                 <circle cx="50" cy="50" r="6" fill="#1a3300" stroke="none"/>
             </g>
 
             <g id="info-overlay" opacity="0" pointer-events="none" transform="scale(0)">
                 <circle cx="50" cy="50" r="36" fill="url(#infoGradient)" stroke="black" stroke-width="0.5"/>
-                
-                <foreignObject x="15" y="15" width="70" height="70">
-                    <div xmlns="http://www.w3.org/1999/xhtml" class="info-content-style">
-                        <div id="info-text-content">Content goes here...</div>
-                    </div>
-                </foreignObject>
-
-                <g class="back-btn" onclick="closeInfo()" style="cursor: pointer;">
-                    <circle cx="50" cy="78" r="6" fill="#00b8c8" stroke="white" stroke-width="0.5" />
-                    <path d="M52 75 L48 78 L52 81" stroke="white" stroke-width="0.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                </g>
+                <foreignObject x="15" y="15" width="70" height="70"><div xmlns="http://www.w3.org/1999/xhtml" class="info-content-style"><div id="info-text-content">Content goes here...</div></div></foreignObject>
+                <g class="back-btn" onclick="closeInfo()" style="cursor: pointer;"><circle cx="50" cy="78" r="6" fill="#00b8c8" stroke="white" stroke-width="0.5" /><path d="M52 75 L48 78 L52 81" stroke="white" stroke-width="0.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
             </g>
-
         </svg>
     </div>
 </div>
 
-<svg id="sourceSVG" style="display:none;" xmlns="http://www.w3.org/2000/svg">
-    <defs><symbol id="bead"><rect width="14" height="15" rx="6" stroke="rgba(0,0,0,0.05)" stroke-width="0.5"/></symbol></defs>
-    <g id="grid-g"></g>
-</svg>
+<svg id="sourceSVG" style="display:none;" xmlns="http://www.w3.org/2000/svg"><defs><symbol id="bead"><rect width="14" height="15" rx="6" stroke="rgba(0,0,0,0.05)" stroke-width="0.5"/></symbol></defs><g id="grid-g"></g></svg>
 
 <script>
-    /* --- LOGIN LOGIC --- */
+    /* --- LOGIC --- */
     function attemptLogin() {
         const input = document.getElementById('password-input');
-        const card = document.getElementById('login-card');
         if(input.value === "Creator") {
             document.body.classList.add('logged-in');
         } else {
-            card.classList.add('shake');
-            input.value = "";
-            input.placeholder = "Try Again";
-            setTimeout(() => card.classList.remove('shake'), 500);
+            input.classList.add('shake');
+            input.value = ""; input.placeholder = "Try Again";
+            setTimeout(() => input.classList.remove('shake'), 500);
         }
     }
+    
+    function logout() {
+        document.body.classList.remove('logged-in');
+        document.getElementById('turtle-content').classList.remove('info-active', 'resources-active');
+        document.getElementById('password-input').value = "";
+        document.getElementById('password-input').placeholder = "Remember the Creator";
+    }
+    
     function handleEnter(e) { if(e.key === 'Enter') attemptLogin(); }
+    function openSignup() { window.open('YOUR_GOOGLE_FORM_LINK', '_blank'); }
 
-    /* --- INFO CONTENT --- */
+    /* --- INFO & RESOURCES --- */
     const infoContent = {
         mission: "We exist to see thousands of indigenous youth transformed bringing hope to our community and beyond.",
         about: "Led by <strong>Scarlett</strong>, a passionate Indigenous social worker, and her husband, Clayton, a <strong>Computer Science lecturer</strong>, we combine cultural wisdom and technical skills.",
         tolerance: "We hold a <strong>zero-tolerance policy</strong> towards bullying, racism, or hate speech. This is a safe space for learning and growth. Respect for one another is our absolute foundation."
     };
 
-    /* --- TRANSFORMATION LOGIC --- */
     function openInfo(type) {
-        const textContainer = document.getElementById('info-text-content');
         if(infoContent[type]) {
-            // 1. Set Content
-            textContainer.innerHTML = infoContent[type];
-            // 2. Add Class to Trigger CSS Animations
-            const turtle = document.getElementById('turtle-content');
-            turtle.classList.add('info-active');
+            document.getElementById('info-text-content').innerHTML = infoContent[type];
+            document.getElementById('turtle-content').classList.add('info-active');
+        }
+    }
+    function closeInfo() { document.getElementById('turtle-content').classList.remove('info-active'); }
+
+    const weekLinks = { 1: "#", 2: "#", 3: "#", 4: "#" };
+    function toggleResources() { document.getElementById('turtle-content').classList.toggle('resources-active'); }
+    function openWeekDoc(n) { 
+        if(document.getElementById('turtle-content').classList.contains('resources-active')) {
+            alert("Week " + n + " coming soon!"); 
         }
     }
 
-    function closeInfo() {
-        const turtle = document.getElementById('turtle-content');
-        turtle.classList.remove('info-active');
-    }
-
-    /* --- RESOURCE LOGIC --- */
-    const weekLinks = {
-        1: "https://docs.google.com/document/d/1DlOVAx3_AJ8sduBflfMvtXnczXdQu5QiLc3Oy_5EikA/edit?usp=sharing",
-        2: "https://docs.google.com/document/d/YOUR_WEEK_2_LINK",
-        3: "https://docs.google.com/document/d/YOUR_WEEK_3_LINK",
-        4: "https://docs.google.com/document/d/YOUR_WEEK_4_LINK"
-    };
-
-    function toggleResources() {
-        const turtle = document.getElementById('turtle-content');
-        turtle.classList.toggle('resources-active');
-    }
-
-    function openWeekDoc(weekNum) {
-        const turtle = document.getElementById('turtle-content');
-        if(!turtle.classList.contains('resources-active')) return;
-        const url = weekLinks[weekNum];
-        if(url && !url.includes("YOUR_")) { window.open(url, '_blank'); } 
-        else { alert("Week " + weekNum + " resources are coming soon!"); }
-    }
-
-    /* --- SIGN UP LOGIC --- */
-    function openSignup() {
-        // REPLACE THIS LINK WITH YOUR ACTUAL GOOGLE FORM
-        window.open('YOUR_GOOGLE_FORM_LINK', '_blank');
-    }
-
-    /* --- BEADWORK GENERATOR --- */
+    /* --- BEADWORK --- */
     const colors = { teal: '#00b8c8', dark: '#111', red: '#e63923', orange: '#f37021', gold: '#ffb326', white: '#ffffff' };
     const patternArr = [{r:1,c:colors.dark,cols:[1,8]},{r:2,c:colors.dark,cols:[1,2,7,8]},{r:3,c:colors.dark,cols:[2,3,6,7]},{r:3,c:colors.red,cols:[1,8]},{r:4,c:colors.red,cols:[1,2,7,8]},{r:4,c:colors.dark,cols:[3,4,5,6]},{r:5,c:colors.red,cols:[2,3,4,5,6,7]},{r:5,c:colors.orange,cols:[1,8]},{r:6,c:colors.orange,cols:[1,8]},{r:5,c:colors.dark,cols:[4,5]},{r:6,c:colors.red,cols:[2,3,4,5,6,7]},{r:7,c:colors.orange,cols:[2,3,4,5,6,7]},{r:7,c:colors.red,cols:[4,5]},{r:7,c:colors.gold,cols:[1,8]},{r:8,c:colors.gold,cols:[1,8]},{r:8,c:colors.orange,cols:[2,3,4,5,6,7]},{r:9,c:colors.gold,cols:[2,3,4,5,6,7]},{r:9,c:colors.white,cols:[1,8]},{r:9,c:colors.orange,cols:[4,5]},{r:10,c:colors.gold,cols:[3,4,5,6]},{r:10,c:colors.white,cols:[1,2,7,8]},{r:11,c:colors.white,cols:[2,3,6,7]},{r:11,c:colors.gold,cols:[4,5]},{r:12,c:colors.white,cols:[2,3,4,5,6,7]},{r:13,c:colors.white,cols:[3,4,5,6]},{r:14,c:colors.white,cols:[4,5]}];
 
     function generateTexture(isLogin) {
-        const g = document.getElementById('grid-g');
-        g.innerHTML = '';
+        const g = document.getElementById('grid-g'); g.innerHTML = '';
         for (let y = 0; y < 18; y++) {
             for (let x = 0; x < 10; x++) {
                 let color = isLogin ? colors.orange : colors.teal;
-                if (!isLogin) {
-                    patternArr.forEach(p => { if(p.r === y && p.cols.includes(x)) color = p.c; });
-                }
+                if (!isLogin) patternArr.forEach(p => { if(p.r === y && p.cols.includes(x)) color = p.c; });
                 const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
                 use.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '#bead');
-                use.setAttribute('x', x * 16); use.setAttribute('y', y * 17);
-                use.setAttribute('fill', color);
+                use.setAttribute('x', x * 16); use.setAttribute('y', y * 17); use.setAttribute('fill', color);
                 g.appendChild(use);
             }
         }
-        const svg = document.getElementById('sourceSVG');
-        svg.setAttribute('width', 160); svg.setAttribute('height', 306);
+        const svg = document.getElementById('sourceSVG'); svg.setAttribute('width', 160); svg.setAttribute('height', 306);
         return `url("data:image/svg+xml;charset=utf-8,${encodeURIComponent(new XMLSerializer().serializeToString(svg))}")`;
     }
-
     document.getElementById('bg-orange').style.backgroundImage = generateTexture(true);
     document.getElementById('bg-pattern').style.backgroundImage = generateTexture(false);
 
