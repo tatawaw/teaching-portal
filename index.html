@@ -435,11 +435,29 @@
     }
     function closeInfo() { document.getElementById('turtle-content').classList.remove('info-active'); }
 
-    const weekLinks = { 1: "#", 2: "#", 3: "#", 4: "#" };
-    function toggleResources() { document.getElementById('turtle-content').classList.toggle('resources-active'); }
+    /* --- RESOURCE LOGIC --- */
+    const weekLinks = {
+        1: "https://docs.google.com/document/d/1DlOVAx3_AJ8sduBflfMvtXnczXdQu5QiLc3Oy_5EikA/edit?usp=sharing",
+        2: "https://docs.google.com/document/d/YOUR_WEEK_2_LINK",
+        3: "https://docs.google.com/document/d/YOUR_WEEK_3_LINK",
+        4: "https://docs.google.com/document/d/YOUR_WEEK_4_LINK"
+    };
+
+    function toggleResources() {
+        const turtle = document.getElementById('turtle-content');
+        turtle.classList.toggle('resources-active');
+    }
+
     function openWeekDoc(n) { 
-        if(document.getElementById('turtle-content').classList.contains('resources-active')) {
-            alert("Week " + n + " coming soon!"); 
+        const turtle = document.getElementById('turtle-content');
+        if(!turtle.classList.contains('resources-active')) return;
+        
+        const url = weekLinks[n];
+        // Check if it's a real link or still a placeholder
+        if(url && !url.includes("YOUR_")) { 
+            window.open(url, '_blank'); 
+        } else { 
+            alert("Week " + n + " resources are coming soon!"); 
         }
     }
 
